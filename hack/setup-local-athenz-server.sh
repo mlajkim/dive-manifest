@@ -34,7 +34,7 @@ fi
 
 app::log::success "✅ All prerequisites passed!"
 
-app::log::progress "--- Preparing Source Code ----------------"
+app::log::progress "Preparing Source Code"
 
 # If no such directory, create one:
 if [ ! -d "$DIR_NAME" ]; then
@@ -45,10 +45,10 @@ else
   git pull --rebase
 fi
 
-app::log::progress "--- Deploying Athenz ---------------------"
+app::log::progress "Deploying Athenz"
 make -C $DIR_NAME deploy-kubernetes-athenz
 
-app::log::progress "--- Verifying Deployment -----------------${NC}"
+app::log::progress "Verifying Deployment"
 echo -e "⏳ Waiting for Athenz pods to be ready (timeout: 120s)..."
 
 # Please sort them with those that run first
