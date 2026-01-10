@@ -49,7 +49,7 @@ echo -e "${CYAN}----------------------------------${NC}\n"
 
 # Create if not exists
 if ! kind get clusters | grep -q "^${CLUSTER_NAME}$"; then
-  echo -e "👷 Creating cluster [$CLUSTER_NAME] with kind command..."
+  app::log::info "👷 Creating cluster [$CLUSTER_NAME] with kind command..."
   kind create cluster --name $CLUSTER_NAME
 fi
 
@@ -57,17 +57,17 @@ TARGET_CONTEXT="kind-${CLUSTER_NAME}"
 CURRENT_CONTEXT=$(kubectl config current-context 2>/dev/null)
 
 if [ "$CURRENT_CONTEXT" == "$TARGET_CONTEXT" ]; then
-  echo -e "${GREEN}✅ Cluster is ready (Already on expected context [$TARGET_CONTEXT].${NC}"
+  app::log::success "✅ Cluster is ready (Already on expected context [$TARGET_CONTEXT]."
 else
-  echo -e "${YELLOW}Current context is '$CURRENT_CONTEXT'. Switching to '$TARGET_CONTEXT'...${NC}"
+  app::log::info "Current context is '$CURRENT_CONTEXT'. Switching to '$TARGET_CONTEXT'..."
 
   if ! kubectl config use-context "$TARGET_CONTEXT"; then
-    echo -e "${RED}❌ Failed to switch context. Does the context exist?${NC}"
+    app::log::error "❌ Failed to switch context. Does the context exist?"
     app::log::errexit_with_log
     exit 1
   fi
 
-  echo -e "${GREEN}✅ Switched to $TARGET_CONTEXT.${NC}"
+  app::log::success "✅ Switched to $TARGET_CONTEXT."
 fi
 
 # Final Verification

@@ -60,6 +60,11 @@ function app::log::error() {
   echo -e "${RED}[ERROR] ${msg}${NC}"
 }
 
+function app::log::progress() {
+  local msg="$1"
+  echo -e "${CYAN}--- $msg ----------------${NC}"
+}
+
 # -----------------------------------------------------------------------------
 # Function: app::log::errexit_with_log
 # Description: Prints an error message and encourages the user to submit a PR.

@@ -34,23 +34,23 @@ if ! kubectl cluster-info > /dev/null 2>&1; then
   app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make -C manifest setup' first."
 fi
 
-echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
+app::log::success "✅ All prerequisites passed!"
 
-echo -e "${CYAN}--- Preparing Source Code ----------------${NC}"
+app::log::progress "--- Preparing Source Code ----------------"
 
 # If no such directory, create one:
 if [ ! -d "$DIR_NAME" ]; then
-  echo -e "📥 Cloning repository to ${YELLOW}$DIR_NAME${NC}..."
+  app::log::info "📥 Cloning repository to ${YELLOW}$DIR_NAME${NC}..."
   git clone "$REPO_URL" "$DIR_NAME"
 else
-  echo -e "🔄 Repository exists. Pulling latest changes..."
+  app::log::info "🔄 Repository exists. Pulling latest changes..."
   git pull --rebase
 fi
 
-echo -e "\n${CYAN}--- Deploying Athenz ---------------------${NC}"
+app::log::progress "--- Deploying Athenz ---------------------"
 make -C $DIR_NAME deploy-kubernetes-athenz
 
-echo -e "\n${CYAN}--- Verifying Deployment -----------------${NC}"
+app::log::progress "--- Verifying Deployment -----------------${NC}"
 echo -e "⏳ Waiting for Athenz pods to be ready (timeout: 120s)..."
 
 # Please sort them with those that run first
