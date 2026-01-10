@@ -15,12 +15,14 @@ source "$(dirname "$0")/colors.sh"
 ##################################################################
 
 # -----------------------------------------------------------------------------
-# Function: app::log::fatal_with_pr
+# Function: app::log::exit_with_log
 # Description: Prints an error message and encourages the user to submit a PR.
 # Arguments:
 #   $1 - The error message to display.
+# Examples:
+#   app::log::exit_with_log "'git' is required but not installed."
 # -----------------------------------------------------------------------------
-function app::log::fatal_with_pr() {
+function app::log::exit_with_log() {
   local error_msg="$1"
   
   # Print the error message in red

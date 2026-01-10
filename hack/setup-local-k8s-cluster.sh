@@ -21,9 +21,7 @@ echo -e "${CYAN}==============================================${NC}"
 echo -e "🔍 Checking Prerequisites..."
 
 if [[ "$(uname)" != "Darwin" ]]; then
-  echo -e "${RED}[Error] Unsupported OS. Only macOS is supported.${NC}"
-  app::log::fatal_with_pr
-  exit 1
+  app::log::exit_with_log "Unsupported OS. Only macOS is supported."
 fi
 
 # Check brew installed:
@@ -84,7 +82,7 @@ else
   
   if ! kubectl config use-context "$TARGET_CONTEXT"; then
     echo -e "${RED}❌ Failed to switch context. Does the context exist?${NC}"
-    app::log::fatal_with_pr
+    app::log::exit_with_log
     exit 1
   fi
   
