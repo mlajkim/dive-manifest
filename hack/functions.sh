@@ -70,7 +70,7 @@ function app::log::startofscript() {
 
 function app::log::progress() {
   local msg="$1"
-  echo -e "${CYAN}--- $msg ----------------${NC}"
+  echo -e "${CYAN}---$msg-----------------${NC}"
 }
 
 # -----------------------------------------------------------------------------
