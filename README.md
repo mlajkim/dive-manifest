@@ -2,11 +2,20 @@
 
 ## How to use
 
+Optional, but let's quickly setup tset working directory:
+
+```sh
+test_name=dive_manifest
+tmp_dir=$(date +%y%m%d_%H%M%S_$test_name)
+mkdir -p ~/test_dive/$tmp_dir
+cd ~/test_dive/$tmp_dir
+```
+
 Run the following command:
 
 ```sh
-git clone https://github.com/mlajkim/dive-manifest.git manifest && cd manifest
-make setup
+git clone https://github.com/mlajkim/dive-manifest.git manifest
+make -C manifest setup
 ```
 
 
