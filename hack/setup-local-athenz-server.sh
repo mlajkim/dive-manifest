@@ -18,8 +18,7 @@ echo -e "${CYAN}==============================================${NC}"
 ### Configuration ################################################
 ##################################################################
 REPO_URL="https://github.com/ctyano/athenz-distribution.git"
-# 현재 스크립트 위치 기준으로 상위 폴더의 .build/athenz 디렉토리 사용
-WORK_DIR="$(dirname "$0")/../.build/athenz-distribution"
+DIR_NAME="athenz"
 
 ##################################################################
 ### Prerequisites Check ##########################################
@@ -44,7 +43,7 @@ fi
 
 # 4. Check Cluster Connection (Athenz를 올릴 땅이 있는지 확인)
 if ! kubectl cluster-info > /dev/null 2>&1; then
-  app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make cluster' first."
+  app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make -C manifest setup' first."
 fi
 
 echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
@@ -54,13 +53,12 @@ echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
 ##################################################################
 echo -e "${CYAN}--- Preparing Source Code ----------------${NC}"
 
-# 디렉토리가 없으면 Clone, 있으면 Pull
-if [ ! -d "$WORK_DIR" ]; then
-  echo -e "📥 Cloning repository to ${YELLOW}$WORK_DIR${NC}..."
-  git clone "$REPO_URL" "$WORK_DIR"
+# If no such directory, create one:
+if [ ! -d "$DIR_NAME" ]; then
+  echo -e "📥 Cloning repository to ${YELLOW}$DIR_NAME${NC}..."
+  git clone "$REPO_URL" "$DIR_NAME"
 else
   echo -e "🔄 Repository exists. Pulling latest changes..."
-  cd "$WORK_DIR"
   git pull --rebase
 fi
 
@@ -68,12 +66,7 @@ fi
 ### Deploy Execution #############################################
 ##################################################################
 echo -e "\n${CYAN}--- Deploying Athenz ---------------------${NC}"
-
-cd "$WORK_DIR"
-
-# 사용자가 요청한 Make 커맨드 실행
-echo -e "🚀 Running: ${YELLOW}make clean-kubernetes-athenz deploy-kubernetes-athenz${NC}"
-make clean-kubernetes-athenz deploy-kubernetes-athenz
+make -C $DIR_NAME deploy-kubernetes-athenz
 
 ##################################################################
 ### Post-Check (Wait for Readiness) ##############################
@@ -81,11 +74,21 @@ make clean-kubernetes-athenz deploy-kubernetes-athenz
 echo -e "\n${CYAN}--- Verifying Deployment -----------------${NC}"
 echo -e "⏳ Waiting for Athenz pods to be ready (timeout: 120s)..."
 
-# ZMS가 뜨는지 확인 (Athenz namespace가 'athenz'라고 가정)
-# 만약 namespace가 다르면 수정 필요
-kubectl wait --namespace athenz \
-  --for=condition=ready pod \
-  --selector=app=zms \
-  --timeout=120s || echo -e "${YELLOW}⚠️  Timed out waiting for ZMS. Check logs manually.${NC}"
+# Please sort them with those that run first
+TIMEOUT=120s
+COMPONENTS=(
+  "athenz-db"
+  "athenz-cli"
+  "athenz-zms-server"
+  "athenz-zts-server"
+  "athenz-ui"
+)
+
+for component in "${COMPONENTS[@]}"; do
+  kubectl wait -n athenz \
+    --for=condition=ready pod \
+    --selector=app.kubernetes.io/name=$component \
+    --timeout=${TIMEOUT} || echo -e "${YELLOW}⚠️  Timed out waiting for $component. Check logs manually.${NC}"
+done
 
 echo -e "${GREEN}✅ Athenz Server deployment finished!${NC}"
