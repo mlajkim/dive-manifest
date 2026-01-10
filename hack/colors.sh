@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Make sure it is loaded only once:
+if [ -n "${_COLORS_SH_LOADED:-}" ]; then
+  return 0
+fi
+_COLORS_SH_LOADED=true
+
 # shellcheck disable=SC2034
 # ANSI Color Codes
 GREEN='\033[0;32m'

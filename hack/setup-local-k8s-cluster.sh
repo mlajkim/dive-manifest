@@ -5,7 +5,7 @@ set -e
 ### Imports ######################################################
 ##################################################################
 # shellcheck disable=SC1091
-source "$(dirname "$0")/colors.sh"
+source "$(dirname "$0")/functions.sh"
 
 ##################################################################
 ### Shellscript Intro                                          ###
@@ -22,6 +22,7 @@ echo -e "🔍 Checking Prerequisites..."
 
 if [[ "$(uname)" != "Darwin" ]]; then
   echo -e "${RED}[Error] Unsupported OS. Only macOS is supported.${NC}"
+  app::log::fatal_with_pr
   exit 1
 fi
 
@@ -77,12 +78,13 @@ TARGET_CONTEXT="kind-${CLUSTER_NAME}"
 CURRENT_CONTEXT=$(kubectl config current-context 2>/dev/null)
 
 if [ "$CURRENT_CONTEXT" == "$TARGET_CONTEXT" ]; then
-  echo -e "${GREEN}✅ Cluster is ready (Already on $TARGET_CONTEXT).${NC}"
+  echo -e "${GREEN}✅ Cluster is ready (Already on expected context [$TARGET_CONTEXT].${NC}"
 else
   echo -e "${YELLOW}Current context is '$CURRENT_CONTEXT'. Switching to '$TARGET_CONTEXT'...${NC}"
   
   if ! kubectl config use-context "$TARGET_CONTEXT"; then
     echo -e "${RED}❌ Failed to switch context. Does the context exist?${NC}"
+    app::log::fatal_with_pr
     exit 1
   fi
   
