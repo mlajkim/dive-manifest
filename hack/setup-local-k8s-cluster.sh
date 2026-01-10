@@ -74,7 +74,12 @@ if ! kind get clusters | grep -q "^${CLUSTER_NAME}$"; then
 
   kind create cluster --name $CLUSTER_NAME
 else
-  echo -e "${GREEN}✅ Cluster is ready.${NC}"
+  if kubectl config get-contexts | grep -q "kind-${CLUSTER_NAME}"; then
+    echo -e "${GREEN}✅ Cluster is ready.${NC}"
+  else
+    echo -e "${YELLOW}Cluster '${CLUSTER_NAME}' already exists, but context is not set.${NC}"
+    kubectl config use-context "kind-${CLUSTER_NAME}"
+  fi
 fi
 
 # Final Verification
