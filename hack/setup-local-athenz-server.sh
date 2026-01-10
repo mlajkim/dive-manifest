@@ -28,12 +28,12 @@ echo -e "🔍 Checking Prerequisites..."
 
 # 1. Check Git
 if ! command -v git &> /dev/null; then
-  app::log::exit_with_log "'git' is required but not installed."
+  app::log::errexit_with_log "'git' is required but not installed."
 fi
 
 # 2. Check Make
 if ! command -v make &> /dev/null; then
-  app::log::exit_with_log "'make' is required but not installed."
+  app::log::errexit_with_log "'make' is required but not installed."
 fi
 
 # 3. Check Helm (Athenz 배포 시 종종 필요함)
@@ -44,7 +44,7 @@ fi
 
 # 4. Check Cluster Connection (Athenz를 올릴 땅이 있는지 확인)
 if ! kubectl cluster-info > /dev/null 2>&1; then
-  app::log::exit_with_log "Kubernetes cluster is not reachable. Please run 'make cluster' first."
+  app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make cluster' first."
 fi
 
 echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
