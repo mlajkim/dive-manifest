@@ -22,6 +22,19 @@ function app::log::info() {
 }
 
 # -----------------------------------------------------------------------------
+# Function: app::log::success
+# Description: Prints a success message in green.
+# Arguments:
+#   $1 - The message to display.
+# Examples:
+#   app::log::success "Setup completed successfully!"
+# -----------------------------------------------------------------------------
+function app::log::success() {
+  local msg="$1"
+  echo -e "${GREEN}[SUCCESS] ${msg}${NC}"
+}
+
+# -----------------------------------------------------------------------------
 # Function: app::log::warning
 # Description: Prints a warning message in yellow.
 # Arguments:

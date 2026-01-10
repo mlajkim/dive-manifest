@@ -13,23 +13,23 @@ DIR_NAME="athenz"
 
 echo -e "🔍 Checking Prerequisites..."
 
-# 1. Check Git
+# Check Git
 if ! command -v git &> /dev/null; then
   app::log::errexit_with_log "'git' is required but not installed."
 fi
 
-# 2. Check Make
+# Check Make
 if ! command -v make &> /dev/null; then
   app::log::errexit_with_log "'make' is required but not installed."
 fi
 
-# 3. Check Helm (Required for Athenz deployment)
+# Check Helm (Required for Athenz deployment)
 if ! command -v helm &> /dev/null; then
-  echo -e "${YELLOW}'helm' not found. Installing via brew...${NC}"
+  app::log::warning "'helm' not found. Installing via brew..."
   brew install helm
 fi
 
-# 4. Check Cluster Connection (Check if cluster is reachable)
+# heck Cluster Connection (Check if cluster is reachable)
 if ! kubectl cluster-info > /dev/null 2>&1; then
   app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make -C manifest setup' first."
 fi
@@ -70,4 +70,4 @@ for component in "${COMPONENTS[@]}"; do
     --timeout=${TIMEOUT} || echo -e "${YELLOW}⚠️  Timed out waiting for $component. Check logs manually.${NC}"
 done
 
-echo -e "${GREEN}✅ Athenz Server deployment finished!${NC}"
+app::log::success "✅ Athenz Server deployment finished!"

@@ -16,25 +16,25 @@ fi
 
 # Check brew installed:
 if ! command -v brew &> /dev/null; then
-  echo -e "${RED}[Error] 'brew' is not installed.${NC}"
+  app::log::warning "'brew' is not installed. Installing..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # 1. Check Docker Daemon
 if ! docker info > /dev/null 2>&1; then
-  echo -e "${RED}[Error] Docker is NOT running.${NC}"
+  app::log::warning "Docker is NOT running. Installing..."
   brew install --cask docker
 fi
 
 # 2. Check Kind installation
 if ! command -v kind &> /dev/null; then
-  echo -e "${RED}[Error] 'kind' is not installed.${NC}"
+  app::log::warning "'kind' is not installed. Installing..."
   brew install kind
 fi
 
 # 3. Check Kubectl installation
 if ! command -v kubectl &> /dev/null; then
-  echo -e "${RED}[Error] 'kubectl' is not installed.${NC}"
+  app::log::warning "'kubectl' is not installed. Installing..."
   brew install kubectl
 fi
 
