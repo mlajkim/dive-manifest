@@ -31,3 +31,15 @@ function app::log::errexit_with_log() {
   
   exit 1
 }
+# -----------------------------------------------------------------------------
+# Function: app::log::info
+# Description: Prints an information message in green.
+# Arguments:
+#   $1 - The message to display.
+# Examples:
+#   app::log::info "Starting the setup process..."
+# -----------------------------------------------------------------------------
+function app::log::info() {
+  local msg="$1"
+  echo -e "${GREEN}[INFO] ${msg}${NC}"
+}
