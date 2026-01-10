@@ -9,6 +9,45 @@ source "$(dirname "$0")/colors.sh"
 # - Action: fatal, ensure, validate (Specific action)
 
 # -----------------------------------------------------------------------------
+# Function: app::log::info
+# Description: Prints an information message in green.
+# Arguments:
+#   $1 - The message to display.
+# Examples:
+#   app::log::info "Starting the setup process..."
+# -----------------------------------------------------------------------------
+function app::log::info() {
+  local msg="$1"
+  echo -e "${GREEN}[INFO] ${msg}${NC}"
+}
+
+# -----------------------------------------------------------------------------
+# Function: app::log::warning
+# Description: Prints a warning message in yellow.
+# Arguments:
+#   $1 - The message to display.
+# Examples:
+#   app::log::warning "This is a warning message."
+# -----------------------------------------------------------------------------
+function app::log::warning() {
+  local msg="$1"
+  echo -e "${YELLOW}[WARNING] ${msg}${NC}"
+}
+
+# -----------------------------------------------------------------------------
+# Function: app::log::error
+# Description: Prints an error message in red.
+# Arguments:
+#   $1 - The message to display.
+# Examples:
+#   app::log::error "This is an error message."
+# -----------------------------------------------------------------------------
+function app::log::error() {
+  local msg="$1"
+  echo -e "${RED}[ERROR] ${msg}${NC}"
+}
+
+# -----------------------------------------------------------------------------
 # Function: app::log::errexit_with_log
 # Description: Prints an error message and encourages the user to submit a PR.
 # Arguments:
@@ -20,26 +59,14 @@ function app::log::errexit_with_log() {
   local error_msg="$1"
   
   # Print the error message in red
-  echo -e "${RED}[ERROR] ${error_msg}${NC}"
+  app::log::error "$error_msg"
   
   # Print the PR encouragement message in yellow
-  echo -e "${YELLOW}-------------------------------------------------------------${NC}"
-  echo -e "${YELLOW}  Found a bug? Or have a better idea?                        ${NC}"
-  echo -e "${YELLOW}  Please feel free to submit a Pull Request!                 ${NC}"
-  echo -e "${YELLOW}  👉 https://github.com/mlajkim/dive-manifest                ${NC}"
-  echo -e "${YELLOW}-------------------------------------------------------------${NC}"
+  app::log::warning "-------------------------------------------------------------"
+  app::log::warning "  Found a bug? Or have a better idea?                        "
+  app::log::warning "  Please feel free to submit a Pull Request!                 "
+  app::log::warning "  👉 https://github.com/mlajkim/dive-manifest                "
+  app::log::warning "-------------------------------------------------------------"
   
   exit 1
-}
-# -----------------------------------------------------------------------------
-# Function: app::log::info
-# Description: Prints an information message in green.
-# Arguments:
-#   $1 - The message to display.
-# Examples:
-#   app::log::info "Starting the setup process..."
-# -----------------------------------------------------------------------------
-function app::log::info() {
-  local msg="$1"
-  echo -e "${GREEN}[INFO] ${msg}${NC}"
 }
