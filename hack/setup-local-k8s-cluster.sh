@@ -12,6 +12,8 @@ if [[ "$(uname)" != "Darwin" ]]; then
   app::log::errexit_with_log "Unsupported OS. Only macOS is supported."
 fi
 
+
+
 # Check brew installed:
 if ! command -v brew &> /dev/null; then
   app::log::warning "'brew' is not installed. Installing..."

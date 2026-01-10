@@ -6,10 +6,14 @@ source "$(dirname "$0")/import.sh"
 
 app::log::startofscript "🛡️  Local Athenz Server Setup Wizard"
 
-REPO_URL="https://github.com/ctyano/athenz-distribution.git"
-DIR_NAME="athenz"
+# Arguments
+DEFAULT_ATHENZ_DIR="../athenz"
+DIR_NAME="${ATHENZ_DIR:-$DEFAULT_ATHENZ_DIR}"
 
-echo -e "🔍 Checking Prerequisites..."
+# Configs
+REPO_URL="https://github.com/ctyano/athenz-distribution.git"
+
+app::log::progress "🔎 Checking Prerequisites..."
 
 # Check Git
 if ! command -v git &> /dev/null; then
