@@ -1,22 +1,12 @@
 #!/bin/bash
 set -e
 
-##################################################################
-### Imports ######################################################
-##################################################################
 # shellcheck disable=SC1091
 source "$(dirname "$0")/functions.sh"
 
-##################################################################
-### Shellscript Intro                                          ###
-##################################################################
 echo -e "${CYAN}==============================================${NC}"
 echo -e "${CYAN}   🚀 Local K8s Cluster Setup Wizard          ${NC}"
 echo -e "${CYAN}==============================================${NC}"
-
-##################################################################
-### Prerequisites Check ##########################################
-##################################################################
 
 echo -e "🔍 Checking Prerequisites..."
 
@@ -48,12 +38,7 @@ if ! command -v kubectl &> /dev/null; then
   brew install kubectl
 fi
 
-
 echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
-
-##################################################################
-### Interactive User Prompt ######################################
-##################################################################
 
 DEFAULT_CLUSTER_NAME="kind"
 CLUSTER_NAME=$DEFAULT_CLUSTER_NAME
@@ -61,10 +46,6 @@ CLUSTER_NAME=$DEFAULT_CLUSTER_NAME
 echo -e "${CYAN}--- Summary ----------------------${NC}"
 echo -e "Cluster Name: ${GREEN}$CLUSTER_NAME${NC}"
 echo -e "${CYAN}----------------------------------${NC}\n"
-
-##################################################################
-### Core LOGIC ###################################################
-##################################################################
 
 # Create if not exists
 if ! kind get clusters | grep -q "^${CLUSTER_NAME}$"; then
@@ -79,13 +60,13 @@ if [ "$CURRENT_CONTEXT" == "$TARGET_CONTEXT" ]; then
   echo -e "${GREEN}✅ Cluster is ready (Already on expected context [$TARGET_CONTEXT].${NC}"
 else
   echo -e "${YELLOW}Current context is '$CURRENT_CONTEXT'. Switching to '$TARGET_CONTEXT'...${NC}"
-  
+
   if ! kubectl config use-context "$TARGET_CONTEXT"; then
     echo -e "${RED}❌ Failed to switch context. Does the context exist?${NC}"
     app::log::errexit_with_log
     exit 1
   fi
-  
+
   echo -e "${GREEN}✅ Switched to $TARGET_CONTEXT.${NC}"
 fi
 
