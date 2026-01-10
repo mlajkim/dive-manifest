@@ -81,4 +81,4 @@ fi
 echo -e "\n🔍 Verifying context..."
 kubectl cluster-info --context "kind-${CLUSTER_NAME}"
 
-echo -e "\n${BLUE}🎉 Setup Complete! Happy Hacking!${NC}"
+echo -e "${GREEN}✅ Kubernetes cluster is ready.${NC}"
