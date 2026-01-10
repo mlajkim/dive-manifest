@@ -4,9 +4,7 @@ set -e
 # shellcheck disable=SC1091
 source "$(dirname "$0")/import.sh"
 
-echo -e "${CYAN}==============================================${NC}"
-echo -e "${CYAN}   🛡️  Local Athenz Server Setup Wizard       ${NC}"
-echo -e "${CYAN}==============================================${NC}"
+app::log::startofscript "🛡️  Local Athenz Server Setup Wizard"
 
 REPO_URL="https://github.com/ctyano/athenz-distribution.git"
 DIR_NAME="athenz"

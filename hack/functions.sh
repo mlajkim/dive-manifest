@@ -31,7 +31,7 @@ function app::log::info() {
 # -----------------------------------------------------------------------------
 function app::log::success() {
   local msg="$1"
-  echo -e "${GREEN}[SUCCESS] ${msg}${NC}"
+  echo -e "${GREEN}${msg}${NC}"
 }
 
 # -----------------------------------------------------------------------------
@@ -58,6 +58,14 @@ function app::log::warning() {
 function app::log::error() {
   local msg="$1"
   echo -e "${RED}[ERROR] ${msg}${NC}"
+}
+
+function app::log::startofscript() {
+  local msg="$1"
+  
+  echo -e "${CYAN}==============================================${NC}"
+  echo -e "${CYAN} $msg${NC}"
+  echo -e "${CYAN}==============================================${NC}"
 }
 
 function app::log::progress() {

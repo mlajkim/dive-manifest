@@ -4,9 +4,7 @@ set -e
 # shellcheck disable=SC1091
 source "$(dirname "$0")/functions.sh"
 
-echo -e "${CYAN}==============================================${NC}"
-echo -e "${CYAN}   🚀 Local K8s Cluster Setup Wizard          ${NC}"
-echo -e "${CYAN}==============================================${NC}"
+app::log::startofscript "🚀 Local K8s Cluster Setup Wizard"
 
 echo -e "🔍 Checking Prerequisites..."
 
