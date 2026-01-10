@@ -2,7 +2,7 @@
 
 ## How to use
 
-Optional, but let's quickly setup tset working directory:
+Optional, but let's quickly setup test working directory:
 
 ```sh
 test_name=dive_manifest
