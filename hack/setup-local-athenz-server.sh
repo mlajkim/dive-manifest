@@ -4,53 +4,55 @@ set -e
 # shellcheck disable=SC1091
 source "$(dirname "$0")/import.sh"
 
-echo -e "${CYAN}==============================================${NC}"
-echo -e "${CYAN}   🛡️  Local Athenz Server Setup Wizard       ${NC}"
-echo -e "${CYAN}==============================================${NC}"
+app::log::startofscript "🛡️  Local Athenz Server Setup Wizard"
 
+# Arguments
+DEFAULT_ATHENZ_DIR="../athenz"
+DIR_NAME="${ATHENZ_DIR:-$DEFAULT_ATHENZ_DIR}"
+
+# Configs
 REPO_URL="https://github.com/ctyano/athenz-distribution.git"
-DIR_NAME="athenz"
 
-echo -e "🔍 Checking Prerequisites..."
+app::log::progress "🔎 Checking Prerequisites..."
 
-# 1. Check Git
+# Check Git
 if ! command -v git &> /dev/null; then
   app::log::errexit_with_log "'git' is required but not installed."
 fi
 
-# 2. Check Make
+# Check Make
 if ! command -v make &> /dev/null; then
   app::log::errexit_with_log "'make' is required but not installed."
 fi
 
-# 3. Check Helm (Required for Athenz deployment)
+# Check Helm (Required for Athenz deployment)
 if ! command -v helm &> /dev/null; then
-  echo -e "${YELLOW}'helm' not found. Installing via brew...${NC}"
+  app::log::warning "'helm' not found. Installing via brew..."
   brew install helm
 fi
 
-# 4. Check Cluster Connection (Check if cluster is reachable)
+# heck Cluster Connection (Check if cluster is reachable)
 if ! kubectl cluster-info > /dev/null 2>&1; then
   app::log::errexit_with_log "Kubernetes cluster is not reachable. Please run 'make -C manifest setup' first."
 fi
 
-echo -e "${GREEN}✅ All prerequisites passed.${NC}\n"
+app::log::success "✅ All prerequisites passed!"
 
-echo -e "${CYAN}--- Preparing Source Code ----------------${NC}"
+app::log::progress "Preparing Source Code"
 
 # If no such directory, create one:
 if [ ! -d "$DIR_NAME" ]; then
-  echo -e "📥 Cloning repository to ${YELLOW}$DIR_NAME${NC}..."
+  app::log::info "📥 Cloning repository to ${YELLOW}$DIR_NAME${NC}..."
   git clone "$REPO_URL" "$DIR_NAME"
 else
-  echo -e "🔄 Repository exists. Pulling latest changes..."
+  app::log::info "🔄 Repository exists. Pulling latest changes..."
   git pull --rebase
 fi
 
-echo -e "\n${CYAN}--- Deploying Athenz ---------------------${NC}"
+app::log::progress "Deploying Athenz"
 make -C $DIR_NAME deploy-kubernetes-athenz
 
-echo -e "\n${CYAN}--- Verifying Deployment -----------------${NC}"
+app::log::progress "Verifying Deployment"
 echo -e "⏳ Waiting for Athenz pods to be ready (timeout: 120s)..."
 
 # Please sort them with those that run first
@@ -70,4 +72,4 @@ for component in "${COMPONENTS[@]}"; do
     --timeout=${TIMEOUT} || echo -e "${YELLOW}⚠️  Timed out waiting for $component. Check logs manually.${NC}"
 done
 
-echo -e "${GREEN}✅ Athenz Server deployment finished!${NC}"
+app::log::success "✅ Athenz Server deployment finished!"

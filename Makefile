@@ -9,4 +9,4 @@ setup:
 help:
 	@echo "Available targets:"
 	@echo "  make setup - Setup local k8s and athenz server"
-	@echo "  make help - Show this help message"
+	@echo "  make help  - Show this help message"
