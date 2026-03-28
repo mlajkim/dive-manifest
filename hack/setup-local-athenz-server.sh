@@ -53,10 +53,10 @@ app::log::progress "Deploying Athenz"
 make -C $DIR_NAME deploy-kubernetes-athenz
 
 app::log::progress "Verifying Deployment"
-echo -e "⏳ Waiting for Athenz pods to be ready (timeout: 120s)..."
+TIMEOUT=180s
+echo -e "⏳ Waiting for Athenz pods to be ready (timeout: ${TIMEOUT})..."
 
 # Please sort them with those that run first
-TIMEOUT=120s
 COMPONENTS=(
   "athenz-db"
   "athenz-cli"
